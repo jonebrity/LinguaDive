@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+
+# Build output
+dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Temporary files
+*.tmp
+*.temp
+
+# Chrome extension development
+*.crx
+*.pem
+
+# Claude Code
+.claude/
+CLAUDE.md
+
+# Duplicate folder (if exists)
+LinguaDive/

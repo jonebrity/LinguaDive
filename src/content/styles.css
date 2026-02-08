@@ -1,0 +1,346 @@
+/**
+ * LinguaDive - Content Script Styles
+ * 浮动按钮条和结果弹窗样式
+ */
+
+/* 浮动按钮条 */
+.linguadive-action-bar {
+  position: absolute;
+  z-index: 2147483647;
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 6px;
+  box-shadow: 0 2px 12px rgba(102, 126, 234, 0.4);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.linguadive-action-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.linguadive-action-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.linguadive-action-btn:active {
+  transform: scale(0.95);
+}
+
+/* Toast 提示 */
+.linguadive-toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2147483647;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.linguadive-toast-hide {
+  opacity: 0;
+}
+
+/* 启用/停用通知 */
+.linguadive-toggle-notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2147483647;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.linguadive-toggle-notification .notification-icon {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.linguadive-toggle-notification.fade-out {
+  opacity: 0;
+}
+
+/* 结果弹窗 */
+
+.linguadive-tooltip {
+  position: absolute;
+  z-index: 2147483647;
+  max-width: 600px;
+  min-width: 420px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  overflow: hidden;
+}
+
+.linguadive-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+}
+
+.linguadive-title-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.linguadive-word {
+  font-weight: 600;
+  font-size: 14px;
+  word-break: break-word;
+  flex: 1;
+  margin-right: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.linguadive-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.linguadive-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.linguadive-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.linguadive-close {
+  font-size: 20px;
+}
+
+.linguadive-settings svg {
+  width: 16px;
+  height: 16px;
+}
+
+.linguadive-content {
+  padding: 16px;
+}
+
+.linguadive-loading {
+  text-align: center;
+  color: #666;
+  padding: 20px 0;
+}
+
+.linguadive-loading::after {
+  content: '';
+  animation: linguadive-dots 1.5s infinite;
+}
+
+@keyframes linguadive-dots {
+  0%, 20% { content: ''; }
+  40% { content: '.'; }
+  60% { content: '..'; }
+  80%, 100% { content: '...'; }
+}
+
+.linguadive-translation,
+.linguadive-meaning,
+.linguadive-examples,
+.linguadive-explanation,
+.linguadive-background,
+.linguadive-summary,
+.linguadive-keypoints {
+  margin-bottom: 12px;
+}
+
+.linguadive-translation:last-child,
+.linguadive-meaning:last-child,
+.linguadive-examples:last-child,
+.linguadive-explanation:last-child,
+.linguadive-background:last-child,
+.linguadive-summary:last-child,
+.linguadive-keypoints:last-child {
+  margin-bottom: 0;
+}
+
+.linguadive-label {
+  font-weight: 600;
+  color: #667eea;
+  margin-bottom: 4px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.linguadive-value {
+  color: #333;
+  word-break: break-word;
+}
+
+.linguadive-examples ul,
+.linguadive-keypoints ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.linguadive-examples li,
+.linguadive-keypoints li {
+  margin-bottom: 4px;
+  color: #555;
+}
+
+.linguadive-examples li:last-child,
+.linguadive-keypoints li:last-child {
+  margin-bottom: 0;
+}
+
+.linguadive-error {
+  color: #e74c3c;
+  text-align: center;
+  padding: 10px 0;
+}
+
+/* 底部工具栏 */
+.linguadive-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: #f8f9fa;
+  border-top: 1px solid #eee;
+}
+
+.linguadive-api-selector {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 12px;
+  background: #fff;
+  color: #333;
+  cursor: pointer;
+  max-width: 140px;
+}
+
+.linguadive-api-selector:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.linguadive-no-api {
+  font-size: 12px;
+  color: #999;
+}
+
+.linguadive-knowledge-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #667eea;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.linguadive-knowledge-link:hover {
+  opacity: 0.8;
+}
+
+.linguadive-knowledge-link svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
+  .linguadive-action-bar {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  .linguadive-tooltip {
+    background: #2d2d2d;
+    color: #e0e0e0;
+  }
+
+  .linguadive-value {
+    color: #e0e0e0;
+  }
+
+  .linguadive-examples li,
+  .linguadive-keypoints li {
+    color: #b0b0b0;
+  }
+
+  .linguadive-loading {
+    color: #999;
+  }
+
+  .linguadive-footer {
+    background: #252525;
+    border-top-color: #3d3d3d;
+  }
+
+  .linguadive-api-selector {
+    background: #3d3d3d;
+    border-color: #4d4d4d;
+    color: #e0e0e0;
+  }
+
+  .linguadive-no-api {
+    color: #777;
+  }
+
+  .linguadive-toast {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+}

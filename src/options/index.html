@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinguaDive 设置</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="options-container">
+    <header class="options-header">
+      <h1>LinguaDive 设置</h1>
+      <p>配置 AI API 和其他选项</p>
+    </header>
+
+    <main class="options-main">
+      <section class="section">
+        <div class="section-header">
+          <h2>AI API 配置</h2>
+          <button type="button" class="btn btn-small btn-primary" id="addApiBtn">+ 添加 API</button>
+        </div>
+
+        <div class="api-list" id="apiList">
+          <!-- 动态生成 -->
+        </div>
+
+        <div class="empty-state" id="emptyState">
+          <p>暂无 API 配置</p>
+          <p class="hint">点击上方「添加 API」按钮添加你的第一个 AI 服务</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>基本设置</h2>
+
+        <div class="form-group">
+          <label class="toggle-label">
+            <span>启用划词功能</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="pluginEnabled" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </label>
+          <p class="hint">关闭后将不再显示划词工具条</p>
+        </div>
+
+        <div class="form-group">
+          <label for="shortcutKey">快捷键</label>
+          <div class="shortcut-input-wrapper">
+            <input type="text" id="shortcutKey" value="Shift+L" readonly placeholder="点击后按下快捷键">
+            <button type="button" class="btn btn-small btn-secondary" id="recordShortcut">录制</button>
+            <button type="button" class="btn btn-small btn-secondary" id="resetShortcut">重置</button>
+          </div>
+          <p class="hint">按下快捷键可快速启用/停用划词功能（默认 Shift+L）</p>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-primary" id="saveBasicSettingsBtn">保存基本设置</button>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>翻译设置</h2>
+
+        <div class="form-group">
+          <label for="targetLang">目标语言</label>
+          <select id="targetLang">
+            <option value="zh-CN">简体中文</option>
+            <option value="zh-TW">繁体中文</option>
+            <option value="en">English</option>
+            <option value="ja">日本語</option>
+            <option value="ko">한국어</option>
+          </select>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-primary" id="saveSettingsBtn">保存翻译设置</button>
+        </div>
+      </section>
+
+      <div class="message" id="message"></div>
+    </main>
+  </div>
+
+  <!-- API 编辑弹窗 -->
+  <div class="modal" id="apiModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">添加 API</h2>
+        <button class="modal-close" id="modalClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="apiName">配置名称</label>
+          <input type="text" id="apiName" placeholder="例如: GPT-4、Claude 等">
+          <p class="hint">用于在翻译时区分不同的 AI</p>
+        </div>
+
+        <div class="form-group">
+          <label for="provider">API 提供商</label>
+          <select id="provider">
+            <option value="openai">OpenAI</option>
+            <option value="claude">Anthropic Claude</option>
+            <option value="deepseek">DeepSeek</option>
+            <option value="custom">自定义 (OpenAI 兼容)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="apiKey">API Key</label>
+          <input type="password" id="apiKey" placeholder="输入你的 API Key">
+          <button type="button" class="btn-toggle-password" id="togglePassword">显示</button>
+        </div>
+
+        <div class="form-group" id="baseUrlGroup">
+          <label for="baseUrl">API Base URL</label>
+          <input type="text" id="baseUrl" placeholder="例如: https://api.openai.com/v1">
+          <p class="hint">留空使用默认地址，自定义提供商必填</p>
+        </div>
+
+        <div class="form-group">
+          <label for="model">模型</label>
+          <input type="text" id="model" placeholder="例如: gpt-3.5-turbo">
+          <p class="hint">留空使用默认模型</p>
+        </div>
+
+        <div class="form-group">
+          <label>用于功能</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="useForTranslate" checked>
+              <span>翻译</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="useForExplain" checked>
+              <span>解释</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="useForSummarize" checked>
+              <span>总结</span>
+            </label>
+          </div>
+          <p class="hint">选择此 API 用于哪些功能</p>
+        </div>
+
+        <div class="test-result" id="testResult"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="testApiBtn">测试连接</button>
+        <button type="button" class="btn btn-primary" id="saveApiBtn">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>

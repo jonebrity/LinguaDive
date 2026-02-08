@@ -181,11 +181,23 @@ function handleMouseUp(event) {
     return;
   }
 
+  // 如果选中内容在输入框或可编辑区域内，不处理
+  if (isEditableElement(event.target)) {
+    return;
+  }
+
   const selection = window.getSelection();
   const selectedText = selection.toString().trim();
 
   if (selectedText && selectedText.length > 0 && selectedText.length < 100000) {
+    // 检查选中内容的容器是否为可编辑元素
     const range = selection.getRangeAt(0);
+    const container = range.commonAncestorContainer;
+    const containerElement = container.nodeType === Node.TEXT_NODE ? container.parentElement : container;
+    if (isEditableElement(containerElement)) {
+      return;
+    }
+
     const rect = range.getBoundingClientRect();
 
     // 获取上下文
@@ -201,6 +213,36 @@ function handleMouseUp(event) {
     // 显示浮动按钮条
     showActionBar(rect);
   }
+}
+
+/**
+ * 判断元素是否为可编辑元素（输入框、文本域、可编辑区域）
+ */
+function isEditableElement(element) {
+  if (!element) return false;
+
+  const tagName = element.tagName;
+
+  // 输入框和文本域
+  if (tagName === 'INPUT' || tagName === 'TEXTAREA') {
+    return true;
+  }
+
+  // contenteditable 元素
+  if (element.isContentEditable) {
+    return true;
+  }
+
+  // 检查父元素是否为 contenteditable
+  let parent = element.parentElement;
+  while (parent) {
+    if (parent.isContentEditable) {
+      return true;
+    }
+    parent = parent.parentElement;
+  }
+
+  return false;
 }
 
 /**

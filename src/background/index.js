@@ -5,10 +5,13 @@
 
 // 创建右键菜单
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: 'linguadive-translate',
-    title: '使用 LinguaDive 翻译',
-    contexts: ['selection']
+  // 先移除已存在的菜单项，避免重复创建错误
+  chrome.contextMenus.removeAll(() => {
+    chrome.contextMenus.create({
+      id: 'linguadive-translate',
+      title: '使用 LinguaDive 翻译',
+      contexts: ['selection']
+    });
   });
 });
 

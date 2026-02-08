@@ -32,6 +32,7 @@ build/
 # Chrome extension development
 *.crx
 *.pem
+*.zip
 
 # Claude Code
 .claude/

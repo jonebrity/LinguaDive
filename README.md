@@ -1,71 +1,6 @@
 # LinguaDive
 
-[English](#english) | [简体中文](#简体中文)
-
----
-
-<a name="english"></a>
-## English
-
-### Introduction
-
-LinguaDive is a browser extension for Chrome and Edge that provides an immersive learning experience. It allows you to translate, explain, and summarize selected text on any webpage, and build your personal knowledge base.
-
-### Features
-
-- **Floating Toolbar**: Select any text on a webpage to trigger a floating toolbar with quick action buttons
-- **Translation (译)**: Translate selected text with context-aware deep meaning analysis
-- **Explanation (释)**: Get easy-to-understand explanations for words, phrases, sentences, or paragraphs
-- **Summary (炼)**: Extract key points and summarize long content intelligently based on text length
-- **Collection (藏)**: Save selected text to your personal knowledge base
-- **Knowledge Base (库)**: Manage all your saved records with categorized tabs, search, and export features
-
-### Additional Features
-
-- **Multiple AI Providers**: Support for OpenAI, Claude, DeepSeek, and custom OpenAI-compatible APIs
-- **Per-function API Configuration**: Assign different AI providers to different functions
-- **Quick Toggle**: Enable/disable the extension with customizable keyboard shortcut (default: Shift+L)
-- **Context-aware**: Automatically captures surrounding context for better AI understanding
-- **Multi-select Delete**: Batch delete records in the knowledge base
-
-### Installation
-
-1. Download or clone this repository
-2. Open Chrome/Edge and navigate to `chrome://extensions/` or `edge://extensions/`
-3. Enable "Developer mode" in the top right corner
-4. Click "Load unpacked" and select the project folder
-5. The LinguaDive icon will appear in your browser toolbar
-
-### Configuration
-
-1. Click the LinguaDive icon in the toolbar
-2. Go to Settings to configure your AI API:
-   - Select API provider (OpenAI, Claude, DeepSeek, or Custom)
-   - Enter your API Key
-   - Optionally set custom Base URL and model
-   - Choose which functions to use with each API
-
-### Usage
-
-1. Select any text on a webpage
-2. A floating toolbar will appear with 5 buttons:
-   - **译** (Translate): Get translation with context analysis
-   - **释** (Explain): Get easy explanation
-   - **炼** (Summarize): Get summary and key points
-   - **藏** (Collect): Save to knowledge base
-   - **库** (Library): Open knowledge base
-3. Press `Shift+L` (or your custom shortcut) to toggle the extension on/off
-
-### Tech Stack
-
-- Manifest V3 (Chrome/Edge compatible)
-- Vanilla JavaScript + HTML + CSS
-- Chrome Storage API
-- Multiple AI API integrations
-
-### License
-
-MIT License
+[简体中文](#简体中文) | [English](#english)
 
 ---
 
@@ -129,5 +64,70 @@ LinguaDive 是一款支持 Chrome 和 Edge 浏览器的扩展插件，提供沉�
 - 多 AI API 集成
 
 ### 开源协议
+
+MIT License
+
+---
+
+<a name="english"></a>
+## English
+
+### Introduction
+
+LinguaDive is a browser extension for Chrome and Edge that provides an immersive learning experience. It allows you to translate, explain, and summarize selected text on any webpage, and build your personal knowledge base.
+
+### Features
+
+- **Floating Toolbar**: Select any text on a webpage to trigger a floating toolbar with quick action buttons
+- **Translation (译)**: Translate selected text with context-aware deep meaning analysis
+- **Explanation (释)**: Get easy-to-understand explanations for words, phrases, sentences, or paragraphs
+- **Summary (炼)**: Extract key points and summarize long content intelligently based on text length
+- **Collection (藏)**: Save selected text to your personal knowledge base
+- **Knowledge Base (库)**: Manage all your saved records with categorized tabs, search, and export features
+
+### Additional Features
+
+- **Multiple AI Providers**: Support for OpenAI, Claude, DeepSeek, and custom OpenAI-compatible APIs
+- **Per-function API Configuration**: Assign different AI providers to different functions
+- **Quick Toggle**: Enable/disable the extension with customizable keyboard shortcut (default: Shift+L)
+- **Context-aware**: Automatically captures surrounding context for better AI understanding
+- **Multi-select Delete**: Batch delete records in the knowledge base
+
+### Installation
+
+1. Download or clone this repository
+2. Open Chrome/Edge and navigate to `chrome://extensions/` or `edge://extensions/`
+3. Enable "Developer mode" in the top right corner
+4. Click "Load unpacked" and select the project folder
+5. The LinguaDive icon will appear in your browser toolbar
+
+### Configuration
+
+1. Click the LinguaDive icon in the toolbar
+2. Go to Settings to configure your AI API:
+   - Select API provider (OpenAI, Claude, DeepSeek, or Custom)
+   - Enter your API Key
+   - Optionally set custom Base URL and model
+   - Choose which functions to use with each API
+
+### Usage
+
+1. Select any text on a webpage
+2. A floating toolbar will appear with 5 buttons:
+   - **译** (Translate): Get translation with context analysis
+   - **释** (Explain): Get easy explanation
+   - **炼** (Summarize): Get summary and key points
+   - **藏** (Collect): Save to knowledge base
+   - **库** (Library): Open knowledge base
+3. Press `Shift+L` (or your custom shortcut) to toggle the extension on/off
+
+### Tech Stack
+
+- Manifest V3 (Chrome/Edge compatible)
+- Vanilla JavaScript + HTML + CSS
+- Chrome Storage API
+- Multiple AI API integrations
+
+### License
 
 MIT License

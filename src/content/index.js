@@ -186,6 +186,11 @@ function handleMouseUp(event) {
     return;
   }
 
+  // 检查当前焦点元素是否为可编辑元素
+  if (document.activeElement && isEditableElement(document.activeElement)) {
+    return;
+  }
+
   const selection = window.getSelection();
   const selectedText = selection.toString().trim();
 
@@ -199,6 +204,11 @@ function handleMouseUp(event) {
     }
 
     const rect = range.getBoundingClientRect();
+
+    // 检查 rect 是否有效（避免定位到左上角）
+    if (rect.width === 0 && rect.height === 0) {
+      return;
+    }
 
     // 获取上下文
     const context = getContext(selection);

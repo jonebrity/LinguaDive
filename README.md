@@ -30,11 +30,24 @@ LinguaDive 是一款支持 Chrome 和 Edge 浏览器的扩展插件，提供沉�
 
 ### 安装方法
 
+#### Chrome / Edge 浏览器
+
 1. 下载或克隆本仓库
 2. 打开 Chrome/Edge 浏览器，访问 `chrome://extensions/` 或 `edge://extensions/`
 3. 开启右上角的"开发者模式"
 4. 点击"加载已解压的扩展程序"，选择项目文件夹
 5. LinguaDive 图标将出现在浏览器工具栏中
+
+#### Firefox 浏览器
+
+1. 下载或克隆本仓库
+2. 将 `manifest.firefox.json` 重命名为 `manifest.json`（备份原文件）
+3. 打开 Firefox，访问 `about:debugging#/runtime/this-firefox`
+4. 点击"临时载入附加组件"
+5. 选择项目文件夹中的 `manifest.json` 文件
+6. LinguaDive 图标将出现在浏览器工具栏中
+
+> 注意：Firefox 临时加载的扩展在浏览器重启后会失效。如需永久安装，需要将扩展打包并签名后发布到 Firefox 附加组件商店。
 
 ### 配置说明
 
@@ -95,11 +108,24 @@ LinguaDive is a browser extension for Chrome and Edge that provides an immersive
 
 ### Installation
 
+#### Chrome / Edge
+
 1. Download or clone this repository
 2. Open Chrome/Edge and navigate to `chrome://extensions/` or `edge://extensions/`
 3. Enable "Developer mode" in the top right corner
 4. Click "Load unpacked" and select the project folder
 5. The LinguaDive icon will appear in your browser toolbar
+
+#### Firefox
+
+1. Download or clone this repository
+2. Rename `manifest.firefox.json` to `manifest.json` (backup the original file)
+3. Open Firefox and navigate to `about:debugging#/runtime/this-firefox`
+4. Click "Load Temporary Add-on"
+5. Select the `manifest.json` file in the project folder
+6. The LinguaDive icon will appear in your browser toolbar
+
+> Note: Temporarily loaded extensions in Firefox will be removed when the browser restarts. For permanent installation, the extension needs to be packaged, signed, and published to the Firefox Add-ons store.
 
 ### Configuration
 

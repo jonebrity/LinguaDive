@@ -17,7 +17,11 @@
       <section class="section">
         <div class="section-header">
           <h2>AI API 配置</h2>
-          <button type="button" class="btn btn-small btn-primary" id="addApiBtn">+ 添加 API</button>
+          <div class="section-header-actions">
+            <button type="button" class="btn btn-small btn-secondary" id="importApiBtn">导入</button>
+            <button type="button" class="btn btn-small btn-secondary" id="exportApiBtn">导出</button>
+            <button type="button" class="btn btn-small btn-primary" id="addApiBtn">+ 添加 API</button>
+          </div>
         </div>
 
         <div class="api-list" id="apiList">
@@ -152,6 +156,7 @@
     </div>
   </div>
 
+  <input type="file" id="importFileInput" accept=".json" style="display: none;">
   <script src="index.js"></script>
 </body>
 </html>

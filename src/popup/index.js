@@ -42,12 +42,13 @@ async function checkApiStatus() {
   const textEl = statusEl.querySelector('.status-text');
 
   try {
-    const data = await chrome.storage.sync.get(['aiSettings']);
-    const settings = data.aiSettings || {};
+    const data = await chrome.storage.sync.get(['apiConfigs']);
+    const configs = data.apiConfigs || [];
 
-    if (settings.apiKey) {
+    if (configs.length > 0) {
+      const names = configs.map(c => c.name || getProviderName(c.provider));
       dotEl.classList.add('active');
-      textEl.textContent = `已配置 ${getProviderName(settings.provider)}`;
+      textEl.textContent = `已配置 ${configs.length} 个 API（${names.join('、')}）`;
     } else {
       dotEl.classList.add('warning');
       textEl.textContent = '未配置 API，请前往设置';

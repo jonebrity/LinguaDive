@@ -42,6 +42,13 @@ function bindEvents() {
   // 添加 API 按钮
   document.getElementById('addApiBtn').addEventListener('click', () => openApiModal(-1));
 
+  // 导出/导入 API 配置
+  document.getElementById('exportApiBtn').addEventListener('click', exportApiConfigs);
+  document.getElementById('importApiBtn').addEventListener('click', () => {
+    document.getElementById('importFileInput').click();
+  });
+  document.getElementById('importFileInput').addEventListener('change', importApiConfigs);
+
   // 保存基本设置
   document.getElementById('saveBasicSettingsBtn').addEventListener('click', saveBasicSettings);
 
@@ -457,6 +464,79 @@ function handleShortcutKeydown(e) {
 
   document.getElementById('shortcutKey').value = parts.join('+');
   stopRecordShortcut();
+}
+
+/**
+ * 导出 API 配置
+ */
+function exportApiConfigs() {
+  if (apiConfigs.length === 0) {
+    showMessage('没有可导出的 API 配置', 'error');
+    return;
+  }
+
+  const exportData = {
+    version: '1.0',
+    type: 'linguadive-api-configs',
+    configs: apiConfigs,
+    exportTime: new Date().toISOString()
+  };
+
+  const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `LinguaDive-API-Configs-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  showMessage(`已导出 ${apiConfigs.length} 个 API 配置`, 'success');
+}
+
+/**
+ * 导入 API 配置
+ */
+async function importApiConfigs(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  // 重置 input，允许重复选择同一文件
+  e.target.value = '';
+
+  try {
+    const text = await file.text();
+    const importData = JSON.parse(text);
+
+    // 验证文件格式
+    if (importData.type !== 'linguadive-api-configs' || !Array.isArray(importData.configs)) {
+      showMessage('无效的配置文件格式', 'error');
+      return;
+    }
+
+    if (importData.configs.length === 0) {
+      showMessage('配置文件中没有 API 配置', 'error');
+      return;
+    }
+
+    const count = importData.configs.length;
+    const action = apiConfigs.length > 0
+      ? confirm(`当前已有 ${apiConfigs.length} 个配置。\n\n点击"确定"覆盖现有配置，点击"取消"追加到现有配置后面。`)
+      : true;
+
+    if (action) {
+      // 覆盖
+      apiConfigs = importData.configs;
+    } else {
+      // 追加
+      apiConfigs = apiConfigs.concat(importData.configs);
+    }
+
+    await chrome.storage.sync.set({ apiConfigs });
+    renderApiList();
+    showMessage(`已导入 ${count} 个 API 配置`, 'success');
+  } catch (error) {
+    showMessage('导入失败: ' + error.message, 'error');
+  }
 }
 
 /**

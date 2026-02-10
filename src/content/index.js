@@ -21,6 +21,11 @@ let currentSelection = {
 let pluginEnabled = true;
 // 快捷键配置
 let shortcutKey = 'Shift+L';
+// 工具条和浮窗的初始视口位置（用于滚动时更新位置）
+let actionBarViewportPos = null;
+let tooltipViewportPos = null;
+let lastScrollX = 0;
+let lastScrollY = 0;
 
 // 初始化
 init();
@@ -43,6 +48,9 @@ async function init() {
 
   // 监听快捷键
   document.addEventListener('keydown', handleShortcutKey);
+
+  // 监听页面滚动，隐藏工具条
+  window.addEventListener('scroll', handleScroll, { passive: true });
 
   // 监听存储变化，实时更新配置
   chrome.storage.onChanged.addListener((changes) => {
@@ -124,7 +132,21 @@ async function togglePlugin() {
       }
     }
   } catch (error) {
-    console.error('切换插件状态失败:', error);
+    // Extension context invalidated: Service Worker 被回收，直接在本地切换状态
+    pluginEnabled = !pluginEnabled;
+    showToggleNotification(pluginEnabled);
+
+    if (!pluginEnabled) {
+      hideActionBar();
+      hideTooltip();
+    }
+
+    // 尝试通过 storage 持久化状态
+    try {
+      await chrome.storage.sync.set({ pluginEnabled });
+    } catch (e) {
+      // 忽略存储失败
+    }
   }
 }
 
@@ -273,6 +295,32 @@ function handleMouseDown(event) {
 }
 
 /**
+ * 处理页面滚动 - 更新工具条和浮窗位置，使其随页面滚动
+ */
+function handleScroll() {
+  const dx = window.scrollX - lastScrollX;
+  const dy = window.scrollY - lastScrollY;
+  lastScrollX = window.scrollX;
+  lastScrollY = window.scrollY;
+
+  // 更新工具条位置
+  if (actionBarElement && actionBarViewportPos) {
+    actionBarViewportPos.left -= dx;
+    actionBarViewportPos.top -= dy;
+    actionBarElement.style.left = `${actionBarViewportPos.left}px`;
+    actionBarElement.style.top = `${actionBarViewportPos.top}px`;
+  }
+
+  // 更新浮窗位置
+  if (tooltipElement && tooltipViewportPos) {
+    tooltipViewportPos.left -= dx;
+    tooltipViewportPos.top -= dy;
+    tooltipElement.style.left = `${tooltipViewportPos.left}px`;
+    tooltipElement.style.top = `${tooltipViewportPos.top}px`;
+  }
+}
+
+/**
  * 处理来自 background 的消息
  */
 function handleMessage(request, sender, sendResponse) {
@@ -409,6 +457,10 @@ function isBlockElement(element) {
 function showActionBar(rect) {
   hideActionBar();
 
+  // 记录当前滚动位置
+  lastScrollX = window.scrollX;
+  lastScrollY = window.scrollY;
+
   actionBarElement = document.createElement('div');
   actionBarElement.className = 'linguadive-action-bar';
 
@@ -439,26 +491,30 @@ function positionActionBar(rect) {
   const viewportWidth = window.innerWidth;
   const viewportHeight = window.innerHeight;
 
-  let left = rect.left + window.scrollX + (rect.width - barRect.width) / 2;
-  let top = rect.bottom + window.scrollY + 6;
+  // fixed 定位使用视口坐标
+  let left = rect.left + (rect.width - barRect.width) / 2;
+  let top = rect.bottom + 6;
 
   // 防止超出右边界
-  if (left + barRect.width > viewportWidth + window.scrollX) {
-    left = viewportWidth + window.scrollX - barRect.width - 10;
+  if (left + barRect.width > viewportWidth) {
+    left = viewportWidth - barRect.width - 10;
   }
 
   // 防止超出下边界，改为显示在上方
-  if (top + barRect.height > viewportHeight + window.scrollY) {
-    top = rect.top + window.scrollY - barRect.height - 6;
+  if (top + barRect.height > viewportHeight) {
+    top = rect.top - barRect.height - 6;
   }
 
   // 防止超出左边界
-  if (left < window.scrollX) {
-    left = window.scrollX + 10;
+  if (left < 0) {
+    left = 10;
   }
 
   actionBarElement.style.left = `${left}px`;
   actionBarElement.style.top = `${top}px`;
+
+  // 记录初始视口位置，用于滚动时更新
+  actionBarViewportPos = { left, top };
 }
 
 /**
@@ -516,6 +572,7 @@ function hideActionBar() {
   if (actionBarElement) {
     actionBarElement.remove();
     actionBarElement = null;
+    actionBarViewportPos = null;
   }
 }
 
@@ -684,6 +741,10 @@ function showCollectionSuccess() {
 function showTooltip(rect, word, result, loading = false, actionType = 'translate') {
   hideTooltip();
 
+  // 记录当前滚动位置
+  lastScrollX = window.scrollX;
+  lastScrollY = window.scrollY;
+
   tooltipElement = document.createElement('div');
   tooltipElement.className = 'linguadive-tooltip';
   tooltipElement.dataset.actionType = actionType;
@@ -780,12 +841,12 @@ function updateTooltipContent(word, result, actionType = 'translate') {
     content.innerHTML = `
       <div class="linguadive-translation">
         <div class="linguadive-label">翻译：</div>
-        <div class="linguadive-value">${escapeHtml(result.translation)}</div>
+        <div class="linguadive-value">${formatText(result.translation)}</div>
       </div>
       ${result.meaning ? `
         <div class="linguadive-meaning">
           <div class="linguadive-label">深层含义：</div>
-          <div class="linguadive-value">${escapeHtml(result.meaning)}</div>
+          <div class="linguadive-value">${formatText(result.meaning)}</div>
         </div>
       ` : ''}
       ${examplesHtml}
@@ -794,12 +855,12 @@ function updateTooltipContent(word, result, actionType = 'translate') {
     content.innerHTML = `
       <div class="linguadive-explanation">
         <div class="linguadive-label">解释：</div>
-        <div class="linguadive-value">${escapeHtml(result.explanation)}</div>
+        <div class="linguadive-value">${formatText(result.explanation)}</div>
       </div>
       ${result.background ? `
         <div class="linguadive-background">
           <div class="linguadive-label">背景知识：</div>
-          <div class="linguadive-value">${escapeHtml(result.background)}</div>
+          <div class="linguadive-value">${formatText(result.background)}</div>
         </div>
       ` : ''}
     `;
@@ -807,13 +868,13 @@ function updateTooltipContent(word, result, actionType = 'translate') {
     content.innerHTML = `
       <div class="linguadive-summary">
         <div class="linguadive-label">核心要点：</div>
-        <div class="linguadive-value">${escapeHtml(result.summary)}</div>
+        <div class="linguadive-value">${formatText(result.summary)}</div>
       </div>
       ${result.keyPoints && result.keyPoints.length > 0 ? `
         <div class="linguadive-keypoints">
           <div class="linguadive-label">关键点：</div>
           <ul>
-            ${result.keyPoints.map(point => `<li>${escapeHtml(point)}</li>`).join('')}
+            ${result.keyPoints.map(point => `<li>${formatText(point)}</li>`).join('')}
           </ul>
         </div>
       ` : ''}
@@ -847,26 +908,37 @@ function positionTooltip(rect) {
   const viewportWidth = window.innerWidth;
   const viewportHeight = window.innerHeight;
 
-  let left = rect.left + window.scrollX;
-  let top = rect.bottom + window.scrollY + 8;
+  // fixed 定位使用视口坐标
+  let left = rect.left;
+  let top = rect.bottom + 8;
 
-  // 防止超出右边界
-  if (left + tooltipRect.width > viewportWidth + window.scrollX) {
-    left = viewportWidth + window.scrollX - tooltipRect.width - 10;
+  // 计算浮窗在视口中的可用高度
+  const spaceBelow = viewportHeight - rect.bottom - 8;
+  const spaceAbove = rect.top - 8;
+
+  // 如果下方空间不够且上方空间更大，显示在上方
+  if (spaceBelow < 200 && spaceAbove > spaceBelow) {
+    top = rect.top - tooltipRect.height - 8;
+    tooltipElement.style.maxHeight = `${Math.min(spaceAbove, viewportHeight * 0.8)}px`;
+  } else {
+    tooltipElement.style.maxHeight = `${Math.min(spaceBelow, viewportHeight * 0.8)}px`;
   }
 
-  // 防止超出下边界，改为显示在上方
-  if (top + tooltipRect.height > viewportHeight + window.scrollY) {
-    top = rect.top + window.scrollY - tooltipRect.height - 8;
+  // 防止超出右边界
+  if (left + tooltipRect.width > viewportWidth) {
+    left = viewportWidth - tooltipRect.width - 10;
   }
 
   // 防止超出左边界
-  if (left < window.scrollX) {
-    left = window.scrollX + 10;
+  if (left < 0) {
+    left = 10;
   }
 
   tooltipElement.style.left = `${left}px`;
   tooltipElement.style.top = `${top}px`;
+
+  // 记录初始视口位置，用于滚动时更新
+  tooltipViewportPos = { left, top };
 }
 
 /**
@@ -876,6 +948,7 @@ function hideTooltip() {
   if (tooltipElement) {
     tooltipElement.remove();
     tooltipElement = null;
+    tooltipViewportPos = null;
   }
 }
 
@@ -917,4 +990,12 @@ function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
+}
+
+/**
+ * 格式化文本（转义 HTML 并保留换行）
+ */
+function formatText(text) {
+  if (!text) return '';
+  return escapeHtml(text).replace(/\n/g, '<br>');
 }

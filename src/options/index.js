@@ -60,11 +60,8 @@ function bindEvents() {
   // 保存翻译设置
   document.getElementById('saveSettingsBtn').addEventListener('click', saveTranslationSettings);
 
-  // 弹窗相关
+  // 弹窗相关 - 只有点击关闭按钮才关闭弹窗
   document.getElementById('modalClose').addEventListener('click', closeApiModal);
-  document.getElementById('apiModal').addEventListener('click', (e) => {
-    if (e.target.id === 'apiModal') closeApiModal();
-  });
 
   // 提供商切换
   document.getElementById('provider').addEventListener('change', updateBaseUrlPlaceholder);
